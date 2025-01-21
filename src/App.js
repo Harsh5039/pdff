@@ -22,7 +22,7 @@ function App() {
   }, []);
 
   const getPdf = async () => {
-    const result = await axios.get("http://localhost:5000/get-files");
+    const result = await axios.get("https://pdfb.onrender.com/get-files");
     console.log(result.data.data);
     setAllImage(result.data.data);
   };
@@ -35,7 +35,7 @@ function App() {
     console.log(title, file);
 
     const result = await axios.post(
-      "http://localhost:5000/upload-files",
+      "https://pdfb.onrender.com/upload-files",
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -49,7 +49,7 @@ function App() {
   };
 
   const showPdf = (pdf) => {
-    setPdfFile(`http://localhost:5000/files/${pdf}`);
+    setPdfFile(`https://pdfb.onrender.com/files/${pdf}`);
   };
 
   const handleOCR = () => {
