@@ -77,3 +77,16 @@ code {
 canvas.react-pdf__Page__canvas {
   margin-bottom: 50px;
 }
+
+.pdf-text-section {
+  margin-top: 20px;
+}
+
+.pdf-text-result {
+  margin-top: 10px;
+}
+
+textarea {
+  width: 100%;
+  resize: none;
+}

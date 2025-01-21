@@ -14,8 +14,9 @@ function App() {
   const [file, setFile] = useState("");
   const [allImage, setAllImage] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
-  const [ocrText, setOcrText] = useState(""); 
-  const [loading, setLoading] = useState(false); 
+  const [ocrText, setOcrText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [pdfText, setPdfText] = useState("");  // State to hold extracted text from PDF
 
   useEffect(() => {
     getPdf();
@@ -50,6 +51,7 @@ function App() {
 
   const showPdf = (pdf) => {
     setPdfFile(`https://pdfb.onrender.com/files/${pdf}`);
+    extractTextFromPdf(`https://pdfb.onrender.com/files/${pdf}`);  // Extract text when showing PDF
   };
 
   const handleOCR = () => {
@@ -74,7 +76,25 @@ function App() {
       }
     };
 
-    reader.readAsDataURL(file); 
+    reader.readAsDataURL(file);
+  };
+
+  const extractTextFromPdf = async (pdfUrl) => {
+    try {
+      const pdf = await pdfjs.getDocument(pdfUrl).promise;
+      let extractedText = "";
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(" ");
+        extractedText += pageText + " ";
+      }
+
+      setPdfText(extractedText);
+    } catch (error) {
+      console.error("Error extracting text from PDF:", error);
+    }
   };
 
   return (
@@ -124,6 +144,8 @@ function App() {
         </div>
       </div>
 
+      <br /> {/* Break tag added here */}
+
       <div className="ocr-section">
         <h4>OCR Functionality:</h4>
         <button className="btn btn-secondary" onClick={handleOCR}>
@@ -134,6 +156,15 @@ function App() {
           <div className="ocr-result">
             <h5>Extracted Text:</h5>
             <textarea value={ocrText} readOnly rows="10" cols="50"></textarea>
+          </div>
+        )}
+      </div>
+
+      <div className="pdf-text-section">
+        <h4>Extracted Text from PDF:</h4>
+        {pdfText && (
+          <div className="pdf-text-result">
+            <textarea value={pdfText} readOnly rows="10" cols="50"></textarea>
           </div>
         )}
       </div>
